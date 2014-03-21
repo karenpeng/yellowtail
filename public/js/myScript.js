@@ -4,9 +4,11 @@ var mouseRealse = false;
 var path;
 var gap = [];
 var dis;
-var newMiddle;
+var newMiddleF, newMiddleB;
+var countPoint = [];
 
 function onMouseDown(event) {
+  gap = [];
   path = new Path();
   path.fillColor = new Color({
     hue: Math.random() * 360,
@@ -18,11 +20,16 @@ function onMouseDown(event) {
   //path.prototype.mouseRealse = false;
   mouseRealse = false;
   path.fullySelected = true;
+  countPoint.push(event.point);
 }
 
 function onMouseDrag(event) {
+  if (gap.length < 1) {
+    console.log("yeah!!!");
+  }
   var step = event.delta / 2;
   gap.push(event.delta);
+  countPoint.push(event.point);
   step.angle += 90;
 
   var top = event.middlePoint + step;
@@ -36,6 +43,8 @@ function onMouseDrag(event) {
 
 function onMouseUp(event) {
   path.add(event.point);
+  countPoint.push(event.point);
+  //gap.push(event.delta);
   path.closed = true;
   path.smooth();
   path.fullySelected = true;
@@ -52,6 +61,7 @@ function onMouseUp(event) {
   //console.log(gap[0], gap[gap.length - 1]);
   dis = path.lastSegment.point - path.segments[path.segments.length /
     2 - 1].point;
+  console.log(gap.length, countPoint.length);
 }
 
 function onFrame(event) {
@@ -60,28 +70,29 @@ function onFrame(event) {
     var newTop = path.segments[0].point - dis;
     var newBottom = path.segments[path.segments.length - 2].point - dis;
 
-    path.insert(path.segments.length / 2 - 2, newTop);
+    path.insert(path.segments.length / 2 - 1, newTop);
     path.removeSegment(0);
     path.insert(path.segments.length / 2, newBottom);
     path.removeSegment(path.segments.length - 2);
 
-    newMiddle = (path.segments[path.segments.length / 2].point + path.segments[
+    newMiddleF = (path.segments[path.segments.length / 2].point + path.segments[
       path.segments.length / 2 - 2].point) / 2;
-    //path.segments[path.segments.length / 2 - 1].point = newMiddle - gap[0];
-    //console.log(path.segments[path.segments.length / 2 - 1].point, path.lastSegment
-    //  .point);
-    //console.log(path.segments[path.segments.length / 2 - 1].point);
-    console.log(path.segments[path.segments.length / 2 - 1].point, path.segments[
-      path.segments.length / 2 - 2].point);
+    path.segments[path.segments.length / 2 - 1].point = newMiddleF - gap[0];
+
+    newMiddleB = (path.segments[0].point + path.segments[path.segments.length -
+      2].point) / 2;
+    path.lastSegment.point = newMiddleB - gap[gap.length - 1];
+    //console.log(path.segments[path.segments.length / 2 - 1].point, path.segments[
+    //path.segments.length / 2 - 2].point);
     path.closed = true;
     path.smooth();
-    for (var i = 0; i < path.segments.length; i++) {
-      var textl = new PointText({
-        point: path.segments[i].point,
-        fontSize: 10,
-        fillColor: 'black',
-        content: i
-      })
-    }
+    // for (var i = 0; i < path.segments.length; i++) {
+    //   var textl = new PointText({
+    //     point: path.segments[i].point,
+    //     fontSize: 10,
+    //     fillColor: 'black',
+    //     content: i
+    //   })
+    // }
   }
 }
