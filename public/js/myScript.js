@@ -1,72 +1,101 @@
-tool.minDistance = 10;
-tool.maxDistance = 45;
-var mouseRealse = false;
-var path;
-var gap = [];
-var dis;
-var newMiddleF, newMiddleB;
-var paths = [];
+tool.minDistance = 1;
+tool.maxDistance = 100;
+var worm;
+var worms = [];
 
-function onMouseDown(event) {
-  gap = [];
-  path = new Path();
-  path.fillColor = new Color({
+function Worm() {
+  this.path = new Path();
+  this.path.fillColor = new Color({
     hue: Math.random() * 360,
     saturation: 1,
     brightness: 1
   });
-  path.add(event.point);
-  path.mouseRelease = false;
-  //path.fullySelected = true;
+  this.mouseRelease = false;
+  this.gap = [];
+  this.dis = 0;
+}
+
+Worm.prototype = {
+  beginPoint: function (p) {
+    this.path.add(p);
+  },
+  pairPoint: function (d, m) {
+    this.gap.push(d);
+    var step = d / 2;
+    step.angle += 90;
+
+    var top = m + step;
+    var bottom = m - step;
+
+    this.path.add(top);
+    this.path.insert(0, bottom);
+    this.path.smooth();
+    this.path.fullySelected = true;
+  },
+  endPoint: function (p) {
+    this.path.add(p);
+    this.path.closed = true;
+    this.path.smooth();
+    this.mouseRelease = true;
+    this.dis = worm.path.lastSegment.point - worm.path.segments[worm.path.segments
+      .length / 2 - 1].point;
+    this.path.fullySelected = true;
+  },
+  move: function () {
+    if (!check && this.mouseRelease) {
+      this.path.fullySelected = true;
+
+      var newTop = this.path.segments[0].point - this.dis;
+      var newBottom = this.path.segments[this.path.segments.length - 2].point -
+        this.dis;
+
+      this.path.insert(this.path.segments.length / 2 - 1, newTop);
+      this.path.removeSegment(0);
+      this.path.insert(this.path.segments.length / 2, newBottom);
+      this.path.removeSegment(this.path.segments.length - 2);
+
+      var newMiddleF = (this.path.segments[this.path.segments.length / 2]
+        .point + this.path.segments[this.path.segments.length / 2 - 2].point
+      ) / 2;
+      this.path.segments[this.path.segments.length / 2 - 1].point =
+        newMiddleF - this.gap[0];
+
+      var newMiddleB = (this.path.segments[0].point + this.path.segments[
+        this.path.segments.length - 2].point) / 2;
+      this.path.lastSegment.point = newMiddleB + this.gap[this.gap.length -
+        1];
+
+      this.path.closed = true;
+      this.path.smooth();
+
+      // this.path.segments.forEach(function (s) {
+      //   console.log(s.point);
+      //   if (s.point.x < 0) s.point.x += view.size.x;
+      //   if (s.point.x > view.size.x) s.point.x -= view.size.x;
+      //   if (s.point.y < 0) s.point.y += view.size.y;
+      //   if (s.point.y > view.size.y) s.point.y -= view.size.y;
+      // })
+    }
+  }
+};
+
+//-----------------------------------------main--------------------------------------------
+function onMouseDown(event) {
+  worm = new Worm();
+  worm.beginPoint(event.point);
 }
 
 function onMouseDrag(event) {
-  gap.push(event.delta);
-  var step = event.delta / 2;
-  step.angle += 90;
-
-  var top = event.middlePoint + step;
-  var bottom = event.middlePoint - step;
-
-  path.add(top);
-  path.insert(0, bottom);
-  path.smooth();
-  //path.fullySelected = true;
+  worm.pairPoint(event.delta, event.middlePoint);
 }
 
 function onMouseUp(event) {
-  path.add(event.point);
-  path.closed = true;
-  path.smooth();
-  path.mouseRelease = true;
-  dis = path.lastSegment.point - path.segments[path.segments.length /
-    2 - 1].point;
-  paths.push(path);
+  worm.endPoint(event.point);
+  worms.push(worm);
 }
 
 function onFrame(event) {
-  paths.forEach(function (key) {
-
-    if (key.mouseRelease) {
-
-      var newTop = key.segments[0].point - dis;
-      var newBottom = key.segments[key.segments.length - 2].point - dis;
-
-      key.insert(key.segments.length / 2 - 1, newTop);
-      key.removeSegment(0);
-      key.insert(key.segments.length / 2, newBottom);
-      key.removeSegment(key.segments.length - 2);
-
-      newMiddleF = (key.segments[key.segments.length / 2].point + key.segments[
-        key.segments.length / 2 - 2].point) / 2;
-      key.segments[key.segments.length / 2 - 1].point = newMiddleF - gap[0];
-
-      newMiddleB = (key.segments[0].point + key.segments[key.segments.length -
-        2].point) / 2;
-      key.lastSegment.point = newMiddleB + gap[gap.length - 1];
-
-      key.closed = true;
-      key.smooth();
-    }
+  worms.forEach(function (w) {
+    w.move();
   })
 }
