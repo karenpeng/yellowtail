@@ -1,6 +1,6 @@
 /*!
- * yellowtail - config/index.js 
- * Copyright(c) 2013 
+ * yellowtail - config/index.js
+ * Copyright(c) 2013
  * Author: karen <karenpenglabs@gmail.com>
  */
 
@@ -24,12 +24,12 @@ var config = {
   webPort: 7001,
   enableCluster: false,
   debug: true, // if debug
-  viewCache: true,
+  viewCache: false,
   sessionSecret: 'input your own sesson secret',
   sessionCookie: 'input your own session cookie',
   logdir: path.join(root, '.tmp', 'logs'),
 };
-  
+
 // load config/config.js, everything in config.js will cover the same key in index.js
 var customConfig = path.join(root, 'config/config.js');
 if (fs.existsSync(customConfig)) {
