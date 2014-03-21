@@ -17,7 +17,7 @@ function onMouseDown(event) {
   });
   path.add(event.point);
   path.mouseRelease = false;
-  path.fullySelected = true;
+  //path.fullySelected = true;
 }
 
 function onMouseDrag(event) {
@@ -41,28 +41,32 @@ function onMouseUp(event) {
   path.mouseRelease = true;
   dis = path.lastSegment.point - path.segments[path.segments.length /
     2 - 1].point;
+  paths.push(path);
 }
 
 function onFrame(event) {
-  if (path.mouseRelease) {
+  paths.forEach(function (key) {
 
-    var newTop = path.segments[0].point - dis;
-    var newBottom = path.segments[path.segments.length - 2].point - dis;
+    if (key.mouseRelease) {
 
-    path.insert(path.segments.length / 2 - 1, newTop);
-    path.removeSegment(0);
-    path.insert(path.segments.length / 2, newBottom);
-    path.removeSegment(path.segments.length - 2);
+      var newTop = key.segments[0].point - dis;
+      var newBottom = key.segments[key.segments.length - 2].point - dis;
 
-    newMiddleF = (path.segments[path.segments.length / 2].point + path.segments[
-      path.segments.length / 2 - 2].point) / 2;
-    path.segments[path.segments.length / 2 - 1].point = newMiddleF - gap[0];
+      key.insert(key.segments.length / 2 - 1, newTop);
+      key.removeSegment(0);
+      key.insert(key.segments.length / 2, newBottom);
+      key.removeSegment(key.segments.length - 2);
 
-    newMiddleB = (path.segments[0].point + path.segments[path.segments.length -
-      2].point) / 2;
-    path.lastSegment.point = newMiddleB + gap[gap.length - 1];
+      newMiddleF = (key.segments[key.segments.length / 2].point + key.segments[
+        key.segments.length / 2 - 2].point) / 2;
+      key.segments[key.segments.length / 2 - 1].point = newMiddleF - gap[0];
 
-    path.closed = true;
-    path.smooth();
-  }
+      newMiddleB = (key.segments[0].point + key.segments[key.segments.length -
+        2].point) / 2;
+      key.lastSegment.point = newMiddleB + gap[gap.length - 1];
+
+      key.closed = true;
+      key.smooth();
+    }
+  })
 }
