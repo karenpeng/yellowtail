@@ -38,13 +38,15 @@ Worm.prototype = {
     }
   },
   endPoint: function (p) {
-    this.path.add(p);
-    this.path.closed = true;
-    this.path.smooth();
-    this.mouseRelease = true;
-    this.dis = this.path.lastSegment.point - this.path.segments[this.path.segments
-      .length / 2 - 1].point;
-    //this.path.fullySelected = true;
+    if (!this.mouseRelease) {
+      this.path.add(p);
+      this.path.closed = true;
+      this.path.smooth();
+      this.mouseRelease = true;
+      this.dis = this.path.lastSegment.point - this.path.segments[this.path.segments
+        .length / 2 - 1].point;
+      //this.path.fullySelected = true;
+    }
   },
   move: function () {
     if (!mobile && this.mouseRelease) {
@@ -102,8 +104,25 @@ function onFrame(event) {
   if (shake && worms.length > 0) {
     var myWorm = [];
     worms.forEach(function (w) {
-      myWorm.push(w);
-      w.path.removeSegments();
+      // var segmentPoint = [];
+      // w.path.segments.forEach(function (s) {
+      //   segmentPoint.push(s.point);
+      //   console.log(s.point);
+      //});
+      // var segmentArray = [];
+      // w.path.segments.forEach(function(item){
+      //   segmentArray.push
+      // })
+      var myWormData = {
+        p: w.path,
+        s: w.path.segments,
+        //sp: segmentPoint,
+        m: w.mouseRelease,
+        g: w.gap,
+        d: w.dis
+      };
+      myWorm.push(myWormData);
+      //w.path.removeSegments();
       w = null;
     });
     socket.emit('myWorm', myWorm);
@@ -112,16 +131,42 @@ function onFrame(event) {
   worms.forEach(function (w) {
     w.move();
   });
-  document.getElementById("shakeShake").innerHTML = worms.length;
+  //document.getElementById("shakeShake").innerHTML = worms.length;
   document.getElementById("ifShake").innerHTML = shake;
 }
 
 socket.on('hisWorm', function (data) {
   //console.log(data);
   data.forEach(function (obj) {
-    worms.push(obj);
     console.log(obj);
+    var newWorm = new Worm();
+    newWorm.path = new Path();
+    newWorm.path = obj.p;
+    obj.s.forEach(function (item) {
+      var newSegment = new Segment();
+      newSegment.point = item.point;
+      newWorm.path.segments = [];
+      newWorm.path.segments.push(newSegment);
+    });
+    newWorm.mouseRelease = obj.m;
+    newWorm.gap = obj.g;
+    newWorm.dis = obj.d;
+    worms.push(newWorm);
+    console.log(worms);
   });
+});
+
+$(window).keydown(function (event) {
+  if (event.which === 32) {
+    event.preventDefault();
+    worms.forEach(function (w) {
+      console.log(w.path.segments);
+      w.path.segments.forEach(function (s) {
+
+        //console.log(s.point);
+      });
+    });
+  }
 });
 
 // (function (exports) {
