@@ -132,7 +132,7 @@ function onFrame(event) {
   if (shake && done) {
     var myWorm = worms[0];
     socket.emit('myWorm', myWorm);
-    $("#shakeShake").html("Yeah!");
+    $("#shakeShake").html("sent!");
   }
   worms.forEach(function (w) {
     w.move();

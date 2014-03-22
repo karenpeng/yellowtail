@@ -6,17 +6,18 @@
 
 'use strict';
 
+var firstId;
+
 //simple example
 module.exports = function (sio) {
   var pageOpen = 0;
   sio.sockets.on('connection', function (socket) {
     if (pageOpen === 0) {
-      var firstId = socket.id;
+      firstId = socket.id;
     }
-    console.log('SOCKET ID ' + socket.id);
     socket.on('myWorm', function (data) {
       sio.sockets.socket(firstId).emit('hisWorm', data);
-      console.log("yeah!");
+      console.log("received!");
     });
 
     pageOpen++;
@@ -25,6 +26,7 @@ module.exports = function (sio) {
     socket.broadcast.emit('in', pageOpen);
 
     socket.on('disconnect', function () {
+      firstId = null;
       pageOpen--;
       socket.broadcast.emit('leave', pageOpen);
     });
