@@ -14,6 +14,7 @@ function Worm() {
   this.mouseRelease = false;
   this.gap = [];
   this.dis = 0;
+  this.clock = 0;
 }
 
 Worm.prototype = {
@@ -49,38 +50,41 @@ Worm.prototype = {
     }
   },
   move: function () {
-    if (!mobile && this.mouseRelease) {
+    if (!mobile && this.mouseRelease && this.path.segments.length % 2 === 0) {
+      this.clock++;
+      if (this.clock > 30) {
 
-      var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
-        this.dis;
-      var newBottom = this.path.segments[this.path.segments.length / 2].point +
-        this.dis;
+        var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
+          this.dis;
+        var newBottom = this.path.segments[this.path.segments.length / 2].point +
+          this.dis;
 
-      this.path.removeSegment(this.path.segments.length / 2 - 2);
-      this.path.insert(0, newTop);
-      this.path.removeSegment(this.path.segments.length / 2);
-      this.path.insert(this.path.segments.length - 1, newBottom);
+        this.path.removeSegment(this.path.segments.length / 2 - 2);
+        this.path.insert(0, newTop);
+        this.path.removeSegment(this.path.segments.length / 2);
+        this.path.insert(this.path.segments.length - 1, newBottom);
 
-      var newMiddleB = (this.path.segments[0].point + this.path.segments[
-        this.path.segments.length - 2].point) / 2;
-      this.path.lastSegment.point = newMiddleB + this.gap[this.gap.length - 1];
+        var newMiddleB = (this.path.segments[0].point + this.path.segments[
+          this.path.segments.length - 2].point) / 2;
+        this.path.lastSegment.point = newMiddleB + this.gap[this.gap.length - 1];
 
-      var newMiddleF = (this.path.segments[this.path.segments.length / 2]
-        .point + this.path.segments[this.path.segments.length / 2 - 2].point
-      ) / 2;
-      this.path.segments[this.path.segments.length / 2 - 1].point =
-        newMiddleF - this.gap[0];
+        var newMiddleF = (this.path.segments[this.path.segments.length / 2]
+          .point + this.path.segments[this.path.segments.length / 2 - 2].point
+        ) / 2;
+        this.path.segments[this.path.segments.length / 2 - 1].point =
+          newMiddleF - this.gap[0];
 
-      this.path.closed = true;
-      this.path.smooth();
+        this.path.closed = true;
+        this.path.smooth();
 
-      // this.path.segments.forEach(function (s) {
-      //   console.log(s.point);
-      //   if (s.point.x < 0) s.point.x += view.size.x;
-      //   if (s.point.x > view.size.x) s.point.x -= view.size.x;
-      //   if (s.point.y < 0) s.point.y += view.size.y;
-      //   if (s.point.y > view.size.y) s.point.y -= view.size.y;
-      // })
+        // this.path.segments.forEach(function (s) {
+        //   console.log(s.point);
+        //   if (s.point.x < 0) s.point.x += view.size.x;
+        //   if (s.point.x > view.size.x) s.point.x -= view.size.x;
+        //   if (s.point.y < 0) s.point.y += view.size.y;
+        //   if (s.point.y > view.size.y) s.point.y -= view.size.y;
+        // })
+      }
     }
   }
 };
@@ -104,25 +108,14 @@ function onFrame(event) {
   if (shake && worms.length > 0) {
     var myWorm = [];
     worms.forEach(function (w) {
-      // var segmentPoint = [];
-      // w.path.segments.forEach(function (s) {
-      //   segmentPoint.push(s.point);
-      //   console.log(s.point);
-      //});
-      // var segmentArray = [];
-      // w.path.segments.forEach(function(item){
-      //   segmentArray.push
-      // })
       var myWormData = {
-        p: w.path,
-        //s: w.path.segments,
-        //sp: segmentPoint,
+        p: w.path.toJSON()[1],
         m: w.mouseRelease,
         g: w.gap,
         d: w.dis
       };
       myWorm.push(myWormData);
-      //w.path.removeSegments();
+      w.path.removeSegments();
       w = null;
     });
     socket.emit('myWorm', myWorm);
@@ -132,7 +125,6 @@ function onFrame(event) {
     w.move();
   });
   //document.getElementById("shakeShake").innerHTML = worms.length;
-  document.getElementById("ifShake").innerHTML = shake;
 }
 
 socket.on('hisWorm', function (data) {
@@ -140,12 +132,15 @@ socket.on('hisWorm', function (data) {
   data.forEach(function (obj) {
     console.log(obj);
     var newWorm = new Worm();
-    newWorm.path = new Path();
+    // newWorm.path = new Path();
+    newWorm.path = new Path(obj.p);
     newWorm.mouseRelease = obj.m;
-    newWorm.gap = obj.g;
-    newWorm.dis = obj.d;
+    obj.g.forEach(function (item) {
+      var gapPoint = new Point(item[1], item[2]);
+      newWorm.gap.push(gapPoint);
+    });
+    newWorm.dis = new Point(obj.d[1], obj.d[2]);
     worms.push(newWorm);
-    console.log(worms);
   });
 });
 
