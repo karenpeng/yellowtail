@@ -15,11 +15,16 @@ module.exports = function (sio) {
     pageOpen++;
     if (pageOpen === 1) {
       firstId = socket.id;
+      console.log("first is", firstId);
     }
     socket.on('myWorm', function (data) {
       sio.sockets.socket(firstId).emit('hisWorm', data);
       console.log("received!");
     });
+    socket.on('hisWorm', function (data) {
+      console.log(data);
+    });
+
     socket.emit('init', pageOpen);
 
     socket.broadcast.emit('in', pageOpen);

@@ -1,5 +1,5 @@
-tool.minDistance = 1;
-tool.maxDistance = 100;
+tool.minDistance = 2;
+tool.maxDistance = 60;
 var worm;
 var worms = [];
 var done = false;
@@ -48,27 +48,6 @@ Worm.prototype = {
   },
   move: function () {
     if (!mobile && this.mouseRelease) {
-      //this.path.fullySelected = true;
-
-      // var newTop = this.path.segments[0].point - this.dis;
-      // var newBottom = this.path.segments[this.path.segments.length - 2].point -
-      //   this.dis;
-
-      // this.path.insert(this.path.segments.length / 2 - 1, newTop);
-      // this.path.removeSegment(0);
-      // this.path.insert(this.path.segments.length / 2, newBottom);
-      // this.path.removeSegment(this.path.segments.length - 2);
-
-      // var newMiddleF = (this.path.segments[this.path.segments.length / 2]
-      //   .point + this.path.segments[this.path.segments.length / 2 - 2].point
-      // ) / 2;
-      // this.path.segments[this.path.segments.length / 2 - 1].point =
-      //   newMiddleF - this.gap[0];
-
-      // var newMiddleB = (this.path.segments[0].point + this.path.segments[
-      //   this.path.segments.length - 2].point) / 2;
-      // this.path.lastSegment.point = newMiddleB + this.gap[this.gap.length -
-      //   1];
 
       var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
         this.dis;
@@ -106,38 +85,44 @@ Worm.prototype = {
 
 //-----------------------------------------main--------------------------------------------
 function onMouseDown(event) {
-  if (!done) {
-    worm = new Worm();
-    worm.beginPoint(event.point);
-  }
+  worm = new Worm();
+  worm.beginPoint(event.point);
 }
 
 function onMouseDrag(event) {
-  if (!done) {
-    worm.pairPoint(event.delta, event.middlePoint);
-  }
+  worm.pairPoint(event.delta, event.middlePoint);
 }
 
 function onMouseUp(event) {
-  if (!done) {
-    worm.endPoint(event.point);
-    worms.push(worm);
-    if (mobile) {
-      done = true;
-    }
-  }
+  worm.endPoint(event.point);
+  worms.push(worm);
 }
 
 function onFrame(event) {
-  if (shake && done) {
-    var myWorm = worms[0];
+  if (shake && worms.length > 0) {
+    var myWorm = [];
+    worms.forEach(function (w) {
+      myWorm.push(w);
+      w.path.removeSegments();
+      w = null;
+    });
     socket.emit('myWorm', myWorm);
-    $("#shakeShake").html("sent!");
+    worms = [];
   }
   worms.forEach(function (w) {
     w.move();
   });
+  document.getElementById("shakeShake").innerHTML = worms.length;
+  document.getElementById("ifShake").innerHTML = shake;
 }
+
+socket.on('hisWorm', function (data) {
+  //console.log(data);
+  data.forEach(function (obj) {
+    worms.push(obj);
+    console.log(obj);
+  });
+});
 
 // (function (exports) {
 //   tool.minDistance = 1;
