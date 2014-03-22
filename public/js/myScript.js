@@ -115,7 +115,7 @@ function onFrame(event) {
       // })
       var myWormData = {
         p: w.path,
-        s: w.path.segments,
+        //s: w.path.segments,
         //sp: segmentPoint,
         m: w.mouseRelease,
         g: w.gap,
@@ -141,13 +141,6 @@ socket.on('hisWorm', function (data) {
     console.log(obj);
     var newWorm = new Worm();
     newWorm.path = new Path();
-    newWorm.path = obj.p;
-    obj.s.forEach(function (item) {
-      var newSegment = new Segment();
-      newSegment.point = item.point;
-      newWorm.path.segments = [];
-      newWorm.path.segments.push(newSegment);
-    });
     newWorm.mouseRelease = obj.m;
     newWorm.gap = obj.g;
     newWorm.dis = obj.d;
