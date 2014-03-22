@@ -23,7 +23,6 @@ var sioRoutes = require('./sio_routes');
 var config = require('./config');
 var routes = require('./routes');
 
-
 var PUBLIC_DIR = path.join(__dirname, 'public');
 
 var app = connect();
@@ -50,7 +49,10 @@ app.use(connect.cookieParser());
 app.use(connect.session({
   key: config.sessionCookie,
   secret: config.sessionSecret,
-  cookie: { path: '/', httpOnly: true},
+  cookie: {
+    path: '/',
+    httpOnly: true
+  },
 }));
 
 //handle csrf, do not open it when
@@ -75,7 +77,6 @@ app.use(render({
   cache: config.viewCache,
   helpers: helpers
 }));
-
 
 /**
  * Web site URL routing

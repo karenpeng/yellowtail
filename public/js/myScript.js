@@ -122,14 +122,16 @@ function onMouseUp(event) {
   if (!done) {
     worm.endPoint(event.point);
     worms.push(worm);
-    if (check) {
+    if (mobile) {
       done = true;
     }
   }
 }
 
 function onFrame(event) {
-  if (shake) {
+  if (shake && done) {
+    var myWorm = worms[0];
+    socket.emit('myWorm', myWorm);
     $("#shakeShake").html("Yeah!");
   }
   worms.forEach(function (w) {

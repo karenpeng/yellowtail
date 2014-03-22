@@ -51,13 +51,13 @@
   }
 
   function ifShake(x, y, z) {
-    if (Math.abs(preX - x) > 5) {
+    if (Math.abs(preX - x) > 10) {
       exports.shake = true;
       preX = x;
-    } else if (Math.abs(preY - y) > 5) {
+    } else if (Math.abs(preY - y) > 10) {
       exports.shake = true;
       preY = y;
-    } else if (Math.abs(preZ - z) > 5) {
+    } else if (Math.abs(preZ - z) > 10) {
       exports.shake = true;
       preZ = z;
     } else {
