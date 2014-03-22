@@ -47,7 +47,7 @@ Worm.prototype = {
     //this.path.fullySelected = true;
   },
   move: function () {
-    if (!check && this.mouseRelease) {
+    if (!mobile && this.mouseRelease) {
       //this.path.fullySelected = true;
 
       // var newTop = this.path.segments[0].point - this.dis;
