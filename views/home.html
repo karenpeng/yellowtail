@@ -4,30 +4,30 @@
     <meta charset="urf-8"/>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="/public/css/yellowtail.css"/>
+    <script type="text/javascript" src="/public/js/mobileDetect.js"></script>
     <script src="http://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   </head>
   <body>
-  <p id="check"></p>
-  <canvas id="myCanvas"></canvas>
+  <div id="mobileIntro">
+    <div id="draw">
+      <p>Draw something</p>
+      <img src="/public/image/draw.png">
+    </div>
+    <div id="shake">
+      <p>Shake when you done</p>
+      <img src="/public/image/shake.png">
+    </div>
+    <p class="once" id="ok">OK !</p>
+  </div>
+  <div id="laptopIntro">
+    <p>Use your phone/tablet to scan the QR code.</p>
+    <img>
+  </div>
+  <canvas class="showCanvas" id="myCanvas"></canvas>
   </body>
-  <script type="text/javascript">
-  function canvasSize (){
-    var canvasW = window.innerWidth;
-    var canvasH = window.innerHeight;
-    var canvasWString = canvasW.toString();
-    var canvasHString = canvasH.toString();
-    $("#myCanvas").css("width",canvasWString+'px');
-    $("#myCanvas").css("height",canvasHString+'px');
-  }
-  canvasSize();
-  $(window).resize(function () {
-    canvasSize();
-  });
-  </script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script type="text/javascript" src="/public/js/mobileDetect.js"></script>
+  <script type="text/javascript" src="/public/js/dom.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.12/paper.js"></script>
-  <script type="text/paperscript" src="/public/js/myScript.js" canvas="myCanvas"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="/public/js/motionDetect.js"></script>
-  <script src="/public/js/socket.js"></script>
+  <script type="text/paperscript" src="/public/js/myScript.js" canvas="myCanvas"></script>
 </html>

@@ -1,10 +1,48 @@
 html,body{
   margin: 0;
   padding: 0;
-  top:0;
+  top: 0;
   left: 0;
+  font-family: Helvetica, Arial, sans-serif;
 }
 
-#myCanvas{
+.hideCanvas{
+  display: none;
   border: solid black 2px;
+}
+
+.showCanvas{
+  display: block;
+  border: solid black 2px;
+}
+
+img{
+  display: block;
+  width: 160px;
+  margin: 20px auto;
+}
+
+p{
+  text-align: center;
+  margin: 40px auto 20px;
+  font-size: 20px;
+}
+
+#ok{
+  text-align: center;
+  width: 140px;
+  padding: 10px 0;
+  color: white;
+  font-size: 24px;
+  background-color: #222;
+}
+
+.twice{}
+
+#draw p{
+  width: 200px;
+}
+
+#shake p{
+  width: 300px;
 }

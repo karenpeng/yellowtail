@@ -1,3 +1,12 @@
+var socket = io.connect('http://' + location.host);
+
+socket.on('init', function (pageNum) {
+  var deviceData = {
+    device: mobile
+  };
+  socket.emit("deviceData", deviceData);
+});
+
 tool.minDistance = 2;
 tool.maxDistance = 60;
 var worm;
@@ -63,7 +72,7 @@ Worm.prototype = {
     if (!mobile && this.mouseRelease && this.path.segments.length % 2 === 0 &&
       this.path.segments.length > 3) {
       this.clock++;
-      if (this.clock > 30) {
+      if (this.clock > 20) {
 
         var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
           this.dis;
@@ -146,8 +155,8 @@ function onFrame(event) {
 
 socket.on('hisMobileWorm', function (data) {
 
-  var ranX = Math.random() * view.size.width / 2;
-  var ranY = Math.random() * view.size.height / 2;
+  var ranX = Math.random() * view.size.width * 2 / 3;
+  var ranY = Math.random() * view.size.height * 2 / 3;
 
   data.forEach(function (obj) {
     var newWorm = new Worm();
@@ -169,8 +178,8 @@ socket.on('hisMobileWorm', function (data) {
 
 socket.on('hisLaptopWorm', function (obj) {
 
-  var ranX = Math.random() * view.size.width / 2;
-  var ranY = Math.random() * view.size.height / 2;
+  var ranX = Math.random() * view.size.width / 4;
+  var ranY = Math.random() * view.size.height / 4;
 
   var newWorm = new Worm();
   newWorm.path = new Path(obj.p);

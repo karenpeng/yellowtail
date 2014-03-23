@@ -37,7 +37,7 @@ module.exports = function (sio) {
     socket.on('laptopWorm', function (data) {
       laptopId.forEach(function (id) {
         if (id !== socket.id) {
-          sio.sockets.socket(id).emit('hisMobileWorm', data);
+          sio.sockets.socket(id).emit('hisLaptopWorm', data);
         }
       });
     });
