@@ -4,23 +4,27 @@
     <meta charset="urf-8"/>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" type="text/css" href="/public/css/yellowtail.css"/>
+    <script src="http://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   </head>
   <body>
   <p id="check"></p>
   <canvas id="myCanvas"></canvas>
   </body>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="http://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   <script type="text/javascript">
+  function canvasSize (){
     var canvasW = window.innerWidth;
     var canvasH = window.innerHeight;
     var canvasWString = canvasW.toString();
     var canvasHString = canvasH.toString();
     $("#myCanvas").css("width",canvasWString+'px');
     $("#myCanvas").css("height",canvasHString+'px');
-    // $("#myCanvas").css("width",'1000px');
-    // $("#myCanvas").css("height",'600px');
+  }
+  canvasSize();
+  $(window).resize(function () {
+    canvasSize();
+  });
   </script>
+  <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript" src="/public/js/mobileDetect.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.12/paper.js"></script>
   <script type="text/paperscript" src="/public/js/myScript.js" canvas="myCanvas"></script>

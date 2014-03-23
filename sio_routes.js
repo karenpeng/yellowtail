@@ -6,24 +6,12 @@
 
 'use strict';
 
-var firstId;
+var laptopId = [];
 
-//simple example
 module.exports = function (sio) {
   var pageOpen = 0;
   sio.sockets.on('connection', function (socket) {
     pageOpen++;
-    if (pageOpen === 1) {
-      firstId = socket.id;
-      console.log("first is", firstId);
-    }
-    socket.on('myWorm', function (data) {
-      sio.sockets.socket(firstId).emit('hisWorm', data);
-      console.log("received!");
-    });
-    socket.on('hisWorm', function (data) {
-      console.log(data);
-    });
 
     socket.emit('init', pageOpen);
 
@@ -31,10 +19,28 @@ module.exports = function (sio) {
 
     socket.on('disconnect', function () {
       pageOpen--;
-      if (pageOpen === 0) {
-        firstId = null;
-      }
       socket.broadcast.emit('leave', pageOpen);
     });
+
+    socket.on('deviceData', function (data) {
+      if (!data.device) {
+        laptopId.push(socket.id);
+      }
+    });
+
+    socket.on('mobileWorm', function (data) {
+      laptopId.forEach(function (id) {
+        sio.sockets.socket(id).emit('hisMobileWorm', data);
+      });
+    });
+
+    socket.on('laptopWorm', function (data) {
+      laptopId.forEach(function (id) {
+        if (id !== socket.id) {
+          sio.sockets.socket(id).emit('hisMobileWorm', data);
+        }
+      });
+    });
+
   });
 };

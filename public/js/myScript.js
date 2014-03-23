@@ -104,24 +104,33 @@ function onMouseDrag(event) {
 
 function onMouseUp(event) {
   worm.endPoint(event.point);
+  if (!mobile) {
+    var laptopWorm = {
+      p: worm.path.toJSON()[1],
+      m: worm.mouseRelease,
+      g: worm.gap,
+      d: worm.dis
+    };
+    socket.emit('laptopWorm', laptopWorm);
+  }
   worms.push(worm);
 }
 
 function onFrame(event) {
   if (shake && worms.length > 0) {
-    var myWorm = [];
+    var mobileWorm = [];
     worms.forEach(function (w) {
-      var myWormData = {
+      var myWorm = {
         p: w.path.toJSON()[1],
         m: w.mouseRelease,
         g: w.gap,
         d: w.dis
       };
-      myWorm.push(myWormData);
+      mobileWorm.push(myWorm);
       w.path.removeSegments();
       w = null;
     });
-    socket.emit('myWorm', myWorm);
+    socket.emit('mobileWorm', mobileWorm);
     worms = [];
   }
 
@@ -135,7 +144,7 @@ function onFrame(event) {
   //document.getElementById("check").innerHTML = worms.length;
 }
 
-socket.on('hisWorm', function (data) {
+socket.on('hisMobileWorm', function (data) {
 
   var ranX = Math.random() * view.size.width / 2;
   var ranY = Math.random() * view.size.height / 2;
@@ -156,4 +165,25 @@ socket.on('hisWorm', function (data) {
     });
     worms.push(newWorm);
   });
+});
+
+socket.on('hisLaptopWorm', function (obj) {
+
+  var ranX = Math.random() * view.size.width / 2;
+  var ranY = Math.random() * view.size.height / 2;
+
+  var newWorm = new Worm();
+  newWorm.path = new Path(obj.p);
+  newWorm.mouseRelease = obj.m;
+  obj.g.forEach(function (item) {
+    var gapPoint = new Point(item[1], item[2]);
+    newWorm.gap.push(gapPoint);
+  });
+  newWorm.dis = new Point(obj.d[1], obj.d[2]);
+
+  newWorm.path.segments.forEach(function (item) {
+    item.point.x += ranX;
+    item.point.y += ranY;
+  });
+  worms.push(newWorm);
 });
