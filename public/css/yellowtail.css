@@ -83,3 +83,10 @@ html,body{
 #showQR:hover{
   cursor:pointer;
 }
+#inspire{
+  font-size: 11px;
+}
+#inspire a{
+  text-decoration: none;
+  color: blue;
+}
