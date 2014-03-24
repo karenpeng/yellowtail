@@ -50,19 +50,18 @@ html,body{
 #QR{
   margin-left: -154px;
   text-align: center;
+  border: solid #dfdfdf 1px;
 }
 #laptopIntro p{
   padding: 10px;
   margin: 0;
-  border: solid black 1px;
 }
 #laptopIntro img{
   width: 200px;
   height: 200px;
   display: block;
-  margin: 0 auto;
+  margin: 0 auto 10px;
   padding: 10px 64px;
-  border: solid black 1px;
 }
 #showQR{
   position: absolute;
@@ -70,7 +69,8 @@ html,body{
   margin-left: -10px;
   padding: 5px;
   text-align: center;
-  border: solid black 1px;
+  color: #555;
+  border: solid #bfbfbf 1px;
 }
 #showQR:hover{
   cursor:pointer;
