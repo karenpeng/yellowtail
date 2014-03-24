@@ -12,8 +12,9 @@ tool.maxDistance = 60;
 var worm;
 var worms = [];
 var done = false;
+var frameCount = 0;
 
-function Worm() {
+function Worm(life) {
   this.path = new Path();
   this.path.fillColor = new Color({
     hue: Math.random() * 360,
@@ -24,6 +25,7 @@ function Worm() {
   this.gap = [];
   this.dis = 0;
   this.clock = 0;
+  this.life = life;
 }
 
 Worm.prototype = {
@@ -59,20 +61,27 @@ Worm.prototype = {
     }
   },
   check: function () {
-    var outCount = 0;
-    this.path.segments.forEach(function (s) {
-      if (s.point.x < 0 || s.point.x > view.size.width || s.point.y < 0 || s.point
-        .y > view.size.height) {
-        outCount++;
-      }
-    });
-    return outCount === this.path.segments.length;
+    if (this.life === 0) {
+      return true;
+    } else {
+      var outCount = 0;
+      this.path.segments.forEach(function (s) {
+        if (s.point.x < 0 || s.point.x > view.size.width || s.point.y < 0 ||
+          s.point
+          .y > view.size.height) {
+          outCount++;
+        }
+      });
+      return outCount === this.path.segments.length;
+    }
   },
   move: function () {
     if (!mobile && this.mouseRelease && this.path.segments.length % 2 === 0 &&
       this.path.segments.length > 3) {
       this.clock++;
       if (this.clock > 20) {
+
+        this.life--;
 
         var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
           this.dis;
@@ -104,7 +113,7 @@ Worm.prototype = {
 //-----------------------------------------main--------------------------------------------
 function onMouseDown(event) {
   if (begin) {
-    worm = new Worm();
+    worm = new Worm(100000000);
     worm.beginPoint(event.point);
   }
 }
@@ -132,6 +141,7 @@ function onMouseUp(event) {
 }
 
 function onFrame(event) {
+  frameCount++;
   if (begin) {
     if (shake && worms.length > 0) {
       var mobileWorm = [];
@@ -153,7 +163,7 @@ function onFrame(event) {
     for (var i = 0; i < worms.length; i++) {
       if (worms[i].check()) {
         worms.splice(i, 1);
-      } else {
+      } else if (frameCount % 2 === 0) {
         worms[i].move();
       }
     }
@@ -171,11 +181,11 @@ socket.on('hisMobileWorm', function (data) {
     init++;
   }
 
-  var ranX = Math.random() * view.size.width / 2;
-  var ranY = Math.random() * view.size.height / 2;
+  var ranX = Math.random() * view.size.width * 5 / 8;
+  var ranY = Math.random() * view.size.height * 5 / 8;
 
   data.forEach(function (obj) {
-    var newWorm = new Worm();
+    var newWorm = new Worm(10000000);
     newWorm.path = new Path(obj.p);
     newWorm.mouseRelease = obj.m;
     obj.g.forEach(function (item) {
