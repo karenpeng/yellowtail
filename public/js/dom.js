@@ -39,7 +39,12 @@
     setTimeout(
       function () {
         //nothing
-      }, 1000
+      }, 2000
+    );
+    setTimeout(
+      function () {
+        $("#init").hide();
+      }, 2001
     );
     setTimeout(
       function () {
@@ -47,12 +52,19 @@
         $("#showQR").hide();
         $("#myCanvas").fadeIn();
         exports.begin = true;
-      }, 1001
+      }, 2002
     );
   }
 
+  var count = 0;
   $("#showQR").click(function () {
-    $("#QR").slideDown('fast');
-    $("#showQR").hide();
+    count++;
+    if (count % 2 === 1) {
+      $("#QR").slideDown('fast');
+      $("#showQR").html("▲");
+    } else {
+      $("#QR").slideUp('fast');
+      $("#showQR").html("▼");
+    }
   });
 })(this);

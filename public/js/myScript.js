@@ -161,10 +161,15 @@ function onFrame(event) {
   }
 }
 
+var init = 0;
+
 socket.on('hisMobileWorm', function (data) {
 
-  $("#QR").slideUp('fast');
-  $("#showQR").fadeIn();
+  if (init === 0) {
+    $("#QR").slideUp('fast');
+    $("#showQR").fadeIn();
+    init++;
+  }
 
   var ranX = Math.random() * view.size.width / 2;
   var ranY = Math.random() * view.size.height / 2;
@@ -189,9 +194,6 @@ socket.on('hisMobileWorm', function (data) {
 
 socket.on('hisLaptopWorm', function (obj) {
 
-  var ranX = Math.random() * view.size.width / 8;
-  var ranY = Math.random() * view.size.height / 8;
-
   var newWorm = new Worm();
   newWorm.path = new Path(obj.p);
   newWorm.mouseRelease = obj.m;
@@ -201,9 +203,5 @@ socket.on('hisLaptopWorm', function (obj) {
   });
   newWorm.dis = new Point(obj.d[1], obj.d[2]);
 
-  newWorm.path.segments.forEach(function (item) {
-    item.point.x += ranX;
-    item.point.y += ranY;
-  });
   worms.push(newWorm);
 });
