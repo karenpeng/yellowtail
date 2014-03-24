@@ -8,22 +8,33 @@
     <script src="http://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
   </head>
   <body>
+  <div id="welcome">
+    <p>Welcome!</p>
+  </div>
   <div id="mobileIntro">
     <div id="draw">
-      <p>Draw something</p>
+      <p>Draw Anything</p>
       <img src="/public/image/draw.png">
     </div>
     <div id="shake">
-      <p>Shake when you done</p>
+      <p>Shake When You're Done</p>
       <img src="/public/image/shake.png">
     </div>
-    <p class="once" id="ok">OK !</p>
+    <p id="ok">Got It !</p>
   </div>
   <div id="laptopIntro">
-    <p>Use your phone/tablet to scan the QR code.</p>
-    <img>
+    <div id="QR">
+      <p>Use your phone/tablet to scan the QR code.</p>
+      <img src="/public/image/xx.jpg">
+    </div>
+    <span id="showQR">▲</span>
   </div>
-  <canvas class="showCanvas" id="myCanvas"></canvas>
+  <script type="text/javascript">
+    if(!mobile){$("#welcome").hide();}
+    $("#mobileIntro").hide();
+    $("#laptopIntro").hide();
+  </script>
+  <canvas id="myCanvas" resize></canvas>
   </body>
   <script type="text/javascript" src="/public/js/dom.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.12/paper.js"></script>

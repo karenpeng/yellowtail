@@ -1,42 +1,47 @@
 (function (exports) {
-  function canvasSize() {
-    var canvasW = window.innerWidth;
-    var canvasH = window.innerHeight;
-    var canvasWString = canvasW.toString();
-    var canvasHString = canvasH.toString();
-    $("#myCanvas").css("width", canvasWString + 'px');
-    $("#myCanvas").css("height", canvasHString + 'px');
-    // $("#mobileIntro").css("width", canvasWString + 'px');
-    // $("#laptopIntro").css("width", canvasWString + 'px');
-  }
-  canvasSize();
-  $(window).resize(function () {
-    if (mobile) {
-      canvasSize();
-    }
+  $("#myCanvas").hide();
+  exports.begin = false;
+
+  setTimeout(
+    function () {
+      //nothing
+    }, 3000
+  );
+  setTimeout(
+    function () {
+      $("#welcome").hide();
+    }, 3001
+  );
+
+  setTimeout(
+    function () {
+      var couter = 0;
+      if (mobile) {
+        $("#mobileIntro").fadeIn();
+        $("#shake").hide();
+        $("#ok").click(function () {
+          couter++;
+          if (couter == 1) {
+            $("#draw").hide();
+            $("#shake").fadeIn();
+            $("#ok").html("Start");
+          } else if (couter == 2) {
+            $("#mobileIntro").hide();
+            $("#myCanvas").fadeIn();
+            exports.begin = true;
+          }
+        });
+      } else {
+        $("#laptopIntro").fadeIn();
+        $("#showQR").hide();
+        $("#myCanvas").fadeIn();
+        exports.begin = true;
+      }
+    }, 3020
+  );
+
+  $("#showQR").click(function () {
+    $("#QR").slideDown('fast');
+    $("#showQR").hide();
   });
-
-  $("#mobileIntro").hide();
-  $("#laptopIntro").hide();
-
-  // if (!mobile) {
-  //   $("#laptopIntro").hide();
-  //   $("#shake").hide();
-  //   $(".once").click(function () {
-  //     $("#draw").hide();
-  //     $("#shake").fadeIn();
-  //     $(".once").addClass("twice");
-  //     $(".twice").removeClass("once");
-  //   });
-  //   $(".twice").click(function () {
-  //     $("#shake").fadeOut();
-  //     $(".twice").fadeOut();
-  //     $("#myCanvas").removeClass("hideCanvas");
-  //     $("#myCanvas").addClass("showCanvas");
-  //   });
-  // } else {
-  //   $("#mobileIntro").hide();
-  //   $("#myCanvas").removeClass("hideCanvas");
-  //   $("#myCanvas").addClass("showCanvas");
-  // }
 })(this);

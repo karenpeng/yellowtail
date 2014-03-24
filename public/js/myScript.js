@@ -103,60 +103,71 @@ Worm.prototype = {
 
 //-----------------------------------------main--------------------------------------------
 function onMouseDown(event) {
-  worm = new Worm();
-  worm.beginPoint(event.point);
+  if (begin) {
+    worm = new Worm();
+    worm.beginPoint(event.point);
+  }
 }
 
 function onMouseDrag(event) {
-  worm.pairPoint(event.delta, event.middlePoint);
+  if (begin) {
+    worm.pairPoint(event.delta, event.middlePoint);
+  }
 }
 
 function onMouseUp(event) {
-  worm.endPoint(event.point);
-  if (!mobile) {
-    var laptopWorm = {
-      p: worm.path.toJSON()[1],
-      m: worm.mouseRelease,
-      g: worm.gap,
-      d: worm.dis
-    };
-    socket.emit('laptopWorm', laptopWorm);
+  if (begin) {
+    worm.endPoint(event.point);
+    if (!mobile) {
+      var laptopWorm = {
+        p: worm.path.toJSON()[1],
+        m: worm.mouseRelease,
+        g: worm.gap,
+        d: worm.dis
+      };
+      socket.emit('laptopWorm', laptopWorm);
+    }
+    worms.push(worm);
   }
-  worms.push(worm);
 }
 
 function onFrame(event) {
-  if (shake && worms.length > 0) {
-    var mobileWorm = [];
-    worms.forEach(function (w) {
-      var myWorm = {
-        p: w.path.toJSON()[1],
-        m: w.mouseRelease,
-        g: w.gap,
-        d: w.dis
-      };
-      mobileWorm.push(myWorm);
-      w.path.removeSegments();
-      w = null;
-    });
-    socket.emit('mobileWorm', mobileWorm);
-    worms = [];
-  }
-
-  for (var i = 0; i < worms.length; i++) {
-    if (worms[i].check()) {
-      worms.splice(i, 1);
-    } else {
-      worms[i].move();
+  if (begin) {
+    if (shake && worms.length > 0) {
+      var mobileWorm = [];
+      worms.forEach(function (w) {
+        var myWorm = {
+          p: w.path.toJSON()[1],
+          m: w.mouseRelease,
+          g: w.gap,
+          d: w.dis
+        };
+        mobileWorm.push(myWorm);
+        w.path.removeSegments();
+        w = null;
+      });
+      socket.emit('mobileWorm', mobileWorm);
+      worms = [];
     }
+
+    for (var i = 0; i < worms.length; i++) {
+      if (worms[i].check()) {
+        worms.splice(i, 1);
+      } else {
+        worms[i].move();
+      }
+    }
+    //document.getElementById("check").innerHTML = worms.length;
   }
-  //document.getElementById("check").innerHTML = worms.length;
 }
 
 socket.on('hisMobileWorm', function (data) {
 
-  var ranX = Math.random() * view.size.width * 2 / 3;
-  var ranY = Math.random() * view.size.height * 2 / 3;
+  $("#QR").slideUp('fast');
+  $("#showQR").fadeIn();
+
+  var ranX = Math.random() * view.size.width / 2;
+  var ranY = Math.random() * view.size.height / 2;
 
   data.forEach(function (obj) {
     var newWorm = new Worm();
@@ -178,8 +189,8 @@ socket.on('hisMobileWorm', function (data) {
 
 socket.on('hisLaptopWorm', function (obj) {
 
-  var ranX = Math.random() * view.size.width / 4;
-  var ranY = Math.random() * view.size.height / 4;
+  var ranX = Math.random() * view.size.width / 8;
+  var ranY = Math.random() * view.size.height / 8;
 
   var newWorm = new Worm();
   newWorm.path = new Path(obj.p);
