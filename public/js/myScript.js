@@ -79,7 +79,7 @@ Worm.prototype = {
     if (!mobile && this.mouseRelease && this.path.segments.length % 2 === 0 &&
       this.path.segments.length > 3) {
       this.clock++;
-      if (this.clock > 20) {
+      if (this.clock > 10) {
 
         this.life--;
 
