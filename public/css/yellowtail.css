@@ -59,7 +59,7 @@ html,body{
   text-align: center;
   border: solid #dfdfdf 1px;
 }
-#laptopIntro p{
+#big{
   padding: 10px;
   margin: 0;
 }
@@ -89,4 +89,9 @@ html,body{
 #inspire a{
   text-decoration: none;
   color: blue;
+}
+#little{
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
 }
