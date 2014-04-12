@@ -46,7 +46,7 @@ Worm.prototype = {
       this.path.add(top);
       this.path.insert(0, bottom);
       this.path.smooth();
-      this.path.fullySelected = true;
+      //this.path.fullySelected = true;
     }
   },
   endPoint: function (p) {
@@ -57,7 +57,7 @@ Worm.prototype = {
       this.mouseRelease = true;
       this.dis = this.path.lastSegment.point - this.path.segments[this.path.segments
         .length / 2 - 1].point;
-      this.path.fullySelected = true;
+      //this.path.fullySelected = true;
     }
   },
   check: function () {
@@ -83,7 +83,7 @@ Worm.prototype = {
 
         this.life--;
 
-        this.path.fullySelected = true;
+        //this.path.fullySelected = true;
 
         var newTop = this.path.segments[this.path.segments.length / 2 - 2].point +
           this.dis;
