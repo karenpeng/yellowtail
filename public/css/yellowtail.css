@@ -7,7 +7,7 @@ html,body{
 }
 
 #myCanvas{
-  border: solid black 1px;
+  /*border: solid black 1px;*/
 }
 
 #init, #welcome{
@@ -94,4 +94,10 @@ html,body{
   font-size: 12px;
   padding: 0;
   margin: 0;
+}
+
+#share{
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
 }
