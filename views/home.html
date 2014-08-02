@@ -36,23 +36,24 @@
     </div>
     <span id="showQR">▼</span>
   </div>
-  <script type="text/javascript">
-    if(!mobile){
-      $("#welcome").hide();
-      $("#init").hide();
-      $("#init").fadeIn();
-    }else{
-      $("#init").hide();
-    }
-    $("#mobileIntro").hide();
-    $("#laptopIntro").hide();
-  </script>
   <canvas id="myCanvas" resize></canvas>
   <div id="share">
     <span class='st_facebook_hcount' displayText='Facebook'></span>
     <span class='st_twitter_hcount' displayText='Tweet'></span>
   </div>
   </body>
+    <script type="text/javascript">
+    if(!mobile){
+      $("#welcome").hide();
+      $("#init").hide();
+      $("#init").fadeIn();
+    }else{
+      $("#init").hide();
+      $("#share").hide();
+    }
+    $("#mobileIntro").hide();
+    $("#laptopIntro").hide();
+  </script>
   <script type="text/javascript" src="/public/js/dom.js"></script>
   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.12/paper.js"></script>
   <script src="/socket.io/socket.io.js"></script>
