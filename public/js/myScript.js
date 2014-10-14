@@ -13,6 +13,7 @@ var worm;
 var worms = [];
 var done = false;
 var frameCount = 0;
+noise.seed(Math.random());
 
 function Worm(life) {
   this.path = new Path();
@@ -108,9 +109,8 @@ Worm.prototype = {
         this.path.closed = true;
         this.path.smooth();
       }
-      noise.seed(Math.random());
-      this.path.segments.forEach(function (s) {
-        s.point += noise.simplex2(s.point.x * 0.1, s.point.y * 0.1);
+      this.path.segments.forEach(function (s, index) {
+        s.point += noise.simplex2(index * 0.1, index * 0.1);
       });
     }
   }
