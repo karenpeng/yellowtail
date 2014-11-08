@@ -110,7 +110,7 @@ Worm.prototype = {
         this.path.smooth();
       }
       this.path.segments.forEach(function (s, index) {
-        s.point += noise.simplex2(index * 0.1, index * 0.1);
+        s.point += noise.simplex2(index * 0.05, index * 0.05);
       });
     }
   }
